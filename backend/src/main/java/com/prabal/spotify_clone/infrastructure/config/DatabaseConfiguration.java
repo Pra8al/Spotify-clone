@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@EnableJpaRepositories({"org.prabal.*"})
+@EnableJpaRepositories({"com.prabal.spotify_clone.usercontext.repository","com.prabal.spotify_clone.catalogcontext.repository"})
 @EnableTransactionManagement
 @EnableJpaAuditing
 public class DatabaseConfiguration {
