@@ -3,6 +3,7 @@ package com.prabal.spotify_clone.usercontext.presentation;
 import com.prabal.spotify_clone.usercontext.ReadUserDTO;
 import com.prabal.spotify_clone.usercontext.application.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,11 +20,11 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-public class AuhResource {
+public class AuthResource {
     private final UserService userService;
     private final ClientRegistration registration;
 
-    public AuhResource(UserService userService, ClientRegistrationRepository registrations) {
+    public AuthResource(UserService userService, ClientRegistrationRepository registrations) {
         this.userService = userService;
         this.registration = registrations.findByRegistrationId("okta");
     }
@@ -41,10 +42,10 @@ public class AuhResource {
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request){
-        String issuerUri = registration.getProviderDetails().getAuthorizationUri();
-        String originUrl = registration.getProviderDetails().getIssuerUri();
+        String issuerUri = registration.getProviderDetails().getIssuerUri();
+        String originUrl = request.getHeader(HttpHeaders.ORIGIN);
         Object[] params = {issuerUri, registration.getClientId(), originUrl};
-        String logoutUrl = MessageFormat.format("{0}/v2/logout?client_id={1}&returnTo={2}", params);
+        String logoutUrl = MessageFormat.format("{0}v2/logout?client_id={1}&returnTo={2}", params);
         request.getSession().invalidate();
         return ResponseEntity.ok().body(Map.of("logoutUrl", logoutUrl));
     }
