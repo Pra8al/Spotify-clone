@@ -5,11 +5,13 @@ import {fontAwesomeIcons} from './shared/font-awesome-icons';
 import {NavigationComponent} from './layout/navigation/navigation.component';
 import {LibraryComponent} from './layout/library/library.component';
 import {HeaderComponent} from './layout/header/header.component';
+import {ToastService} from './service/toast.service';
+import {NgbToast} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, FontAwesomeModule, NavigationComponent, LibraryComponent, HeaderComponent],
+  imports: [RouterOutlet, FontAwesomeModule, NavigationComponent, LibraryComponent, HeaderComponent, NgbToast],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -17,8 +19,10 @@ export class AppComponent implements OnInit {
   title = 'Spotify-clone';
 
   private faIconLibrary = inject(FaIconLibrary);
+  toastService = inject(ToastService);
 
   ngOnInit() {
-    this.faIconLibrary.addIcons(...fontAwesomeIcons)
+    this.faIconLibrary.addIcons(...fontAwesomeIcons);
+    this.toastService.show("Hello Toast","SUCCESS");
   }
 }
