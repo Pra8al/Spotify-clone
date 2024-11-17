@@ -5,6 +5,7 @@ import {SongService} from '../service/song.service';
 import {ToastService} from '../service/toast.service';
 import {ReadSong} from '../service/model/song.model';
 import {FormBuilder} from '@angular/forms';
+import {SongContentService} from '../service/song-content.service';
 
 @Component({
   selector: 'app-home',
@@ -16,6 +17,7 @@ import {FormBuilder} from '@angular/forms';
 export class HomeComponent implements OnInit {
   private songService = inject(SongService);
   private toastService = inject(ToastService);
+  private songContentService = inject(SongContentService);
   allSongs: Array<ReadSong> | undefined;
 
   constructor() {
@@ -31,5 +33,9 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.songService.getAll();
+  }
+
+  onPlaySong(songToPlayFirst: ReadSong) {
+    this.songContentService.createNewQueue(songToPlayFirst, this.allSongs!);
   }
 }

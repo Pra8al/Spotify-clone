@@ -4,6 +4,7 @@ import {RouterLink, RouterModule} from '@angular/router';
 import {SmallSongCardComponent} from '../../shared/small-song-card/small-song-card.component';
 import {SongService} from '../../service/song.service';
 import {ReadSong} from '../../service/model/song.model';
+import {SongContentService} from '../../service/song-content.service';
 
 @Component({
   selector: 'app-library',
@@ -18,19 +19,29 @@ import {ReadSong} from '../../service/model/song.model';
 export class LibraryComponent implements OnInit {
 
   private songService = inject(SongService);
+  private songContentService = inject(SongContentService);
 
   songs: Array<ReadSong> = [];
 
   constructor() {
     effect(() => {
-      if(this.songService.getAllSig().status==="OK") {
-        this.songs  = this.songService.getAllSig().value!;
+      if (this.songService.getAllSig().status === "OK") {
+        this.songs = this.songService.getAllSig().value!;
       }
     })
   }
 
-    ngOnInit(): void {
-        throw new Error('Method not implemented.');
-    }
+  ngOnInit(): void {
+    this.fetchSongs();
+  }
+
+  private fetchSongs(): void {
+    this.songService.getAll();
+  }
+
+  onPlaySong(songToPlayFirst: ReadSong): void {
+    this.songContentService.createNewQueue(songToPlayFirst, this.songs);
+  }
+
 
 }

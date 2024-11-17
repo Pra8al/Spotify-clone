@@ -1,4 +1,4 @@
-import {Component, input, OnInit} from '@angular/core';
+import {Component, EventEmitter, input, OnInit, Output} from '@angular/core';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {ReadSong} from '../../service/model/song.model';
@@ -29,6 +29,7 @@ export class SongCardComponent implements OnInit {
 
   song = input.required<ReadSong>();
   songDisplay: ReadSong = {favorite:false, displayPlay: false};
+  @Output() songToPlay$ = new EventEmitter<ReadSong>();
 
     ngOnInit(): void {
       this.songDisplay = this.song();
@@ -36,6 +37,10 @@ export class SongCardComponent implements OnInit {
 
   onHoverPlay(displayIcon: boolean): void {
     this.songDisplay.displayPlay = displayIcon;
+  }
+
+  play(): void {
+      this.songToPlay$.next(this.songDisplay);
   }
 
 }

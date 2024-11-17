@@ -60,7 +60,7 @@ export class AuthService {
           this.fetchUser$.set(State.Builder<User, HttpErrorResponse>().forSuccess({email: this.notConnected}).build());
           location.href = response.logoutUrl
         }, error: (err: any) => {
-          console.log(err);
+          console.error(err);
         }
       });
   }

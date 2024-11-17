@@ -44,7 +44,7 @@ export class AddSongComponent implements OnDestroy {
     effect(() => {
       this.isCreating = false;
       if (this.songService.addSig().status === "OK") {
-        // this.songService.getAll();
+        this.songService.getAll();
         this.toastService.show("Song created with success", "SUCCESS");
       } else if (this.songService.addSig().status === "ERROR") {
         this.toastService.show("Error occurred when created song, please try again", "DANGER");
