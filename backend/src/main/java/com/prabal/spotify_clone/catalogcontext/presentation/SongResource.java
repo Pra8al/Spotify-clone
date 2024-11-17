@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prabal.spotify_clone.catalogcontext.application.SongService;
 import com.prabal.spotify_clone.catalogcontext.application.dto.ReadSongInfoDTO;
 import com.prabal.spotify_clone.catalogcontext.application.dto.SaveSongDTO;
+import com.prabal.spotify_clone.catalogcontext.application.dto.SongContentDTO;
 import com.prabal.spotify_clone.usercontext.application.UserService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
@@ -16,7 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -36,12 +39,12 @@ public class SongResource {
     @PostMapping(value = "/songs", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ReadSongInfoDTO> add(@RequestParam(name = "cover") MultipartFile cover,
                                                @RequestParam(name = "file") MultipartFile file,
-                                               @RequestParam(name ="dto") String saveSongDTOString) throws IOException {
+                                               @RequestParam(name = "dto") String saveSongDTOString) throws IOException {
         SaveSongDTO saveSongDTO = objectMapper.readValue(saveSongDTOString, SaveSongDTO.class);
-        saveSongDTO = new SaveSongDTO(saveSongDTO.title(), saveSongDTO.author(), cover.getBytes(), cover.getContentType(), file.getBytes(), file.getContentType() );
+        saveSongDTO = new SaveSongDTO(saveSongDTO.title(), saveSongDTO.author(), cover.getBytes(), cover.getContentType(), file.getBytes(), file.getContentType());
 
-        Set<ConstraintViolation<SaveSongDTO>> violations =  validator.validate(saveSongDTO);
-        if(!violations.isEmpty()){
+        Set<ConstraintViolation<SaveSongDTO>> violations = validator.validate(saveSongDTO);
+        if (!violations.isEmpty()) {
             String violationJoined = violations.stream().map(violation -> violation.getPropertyPath() + " " + violation.getMessage())
                     .collect(Collectors.joining());
             ProblemDetail validationIssue = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
@@ -53,7 +56,14 @@ public class SongResource {
     }
 
     @GetMapping(value = "/songs")
-    public ResponseEntity<List<ReadSongInfoDTO>> getAll(){
+    public ResponseEntity<List<ReadSongInfoDTO>> getAll() {
         return ResponseEntity.ok(songService.getAll());
+    }
+
+    @GetMapping("/songs/get-content")
+    public ResponseEntity<SongContentDTO> getOneByPublicId(@RequestParam UUID publicId) {
+        Optional<SongContentDTO> songContentByPublicId = songService.getOneByPublicId(publicId);
+        return songContentByPublicId.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "UUID Unknown")).build());
     }
 }
