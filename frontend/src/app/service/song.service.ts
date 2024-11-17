@@ -1,6 +1,6 @@
 import {computed, inject, Injectable, signal, WritableSignal} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {SaveSong} from './model/song.model';
+import {ReadSong, SaveSong} from './model/song.model';
 import {State} from './model/state.model';
 import {environment} from '../../environments/environment.development';
 import {User} from './model/user.model';
@@ -17,24 +17,40 @@ export class SongService {
 
   addSig = computed(() => this.add$());
 
+  private getAll$: WritableSignal<State<Array<ReadSong>, HttpErrorResponse>> =
+    signal(State.Builder<Array<ReadSong>, HttpErrorResponse>().forInit().build());
+
+  getAllSig = computed(() => this.getAll$());
+
   add(song: SaveSong): void {
     const formData = new FormData();
-    formData.append('cover',song.cover!);
+    formData.append('cover', song.cover!);
     formData.append('file', song.file!);
     const clone = structuredClone(song);
     clone.file = undefined;
     clone.cover = undefined;
     formData.append('dto', JSON.stringify(clone));
     this.http.post<SaveSong>(`${environment.API_URL}/api/songs`, formData)
-    .subscribe({
-      next: savedSong => this.add$.set(State.Builder<SaveSong, HttpErrorResponse>().forSuccess(savedSong).build()),
-      error: (err: HttpErrorResponse) => this.add$.set(State.Builder<SaveSong, HttpErrorResponse>().forError(err).build()),
-    })
+      .subscribe({
+        next: savedSong => this.add$.set(State.Builder<SaveSong, HttpErrorResponse>().forSuccess(savedSong).build()),
+        error: (err: HttpErrorResponse) => this.add$.set(State.Builder<SaveSong, HttpErrorResponse>().forError(err).build()),
+      })
   }
 
   reset(): void {
     this.add$.set(State.Builder<SaveSong, HttpErrorResponse>().forInit().build());
   }
 
-  constructor() { }
+  getAll(): void {
+    this.http.get<Array<ReadSong>>(`${environment.API_URL}/api/songs`)
+      .subscribe(
+        {
+          next: songs => this.getAll$.set(State.Builder<Array<ReadSong>, HttpErrorResponse>().forSuccess(songs).build()),
+          error: err => this.getAll$.set(State.Builder<Array<ReadSong>, HttpErrorResponse>().forError(err).build())
+        }
+      )
+  }
+
+  constructor() {
+  }
 }
