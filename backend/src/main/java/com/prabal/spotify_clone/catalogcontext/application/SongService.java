@@ -31,7 +31,7 @@ public class SongService {
         this.songContentMapper = songContentMapper;
     }
 
-    public ReadSongInfoDTO create(SaveSongDTO saveSongDTO){
+    public ReadSongInfoDTO create(SaveSongDTO saveSongDTO) {
         Song song = songMapper.saveSongDTOToSong(saveSongDTO);
         Song songSaved = songRepository.save(song);
 
@@ -45,14 +45,20 @@ public class SongService {
     }
 
     @Transactional(readOnly = true)
-    public List<ReadSongInfoDTO> getAll(){
+    public List<ReadSongInfoDTO> getAll() {
         return songRepository.findAll()
                 .stream().map(songMapper::songToReadSongInfoDTO)
                 .toList();
     }
 
-    public Optional<SongContentDTO> getOneByPublicId(UUID uuid){
+    public Optional<SongContentDTO> getOneByPublicId(UUID uuid) {
         Optional<SongContent> songByPublicId = songContentRepository.findOneBySongPublicId(uuid);
         return songByPublicId.map(songContentMapper::songContentToSongContentDTO);
+    }
+
+    public List<ReadSongInfoDTO> search(String searchText) {
+        List<Song> songTitleOrAuthorContaining = songRepository.findByTitleOrAuthorContaining(searchText);
+        return songTitleOrAuthorContaining.stream().map(songMapper::songToReadSongInfoDTO)
+                .toList();
     }
 }

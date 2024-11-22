@@ -5,7 +5,6 @@ import com.prabal.spotify_clone.catalogcontext.application.SongService;
 import com.prabal.spotify_clone.catalogcontext.application.dto.ReadSongInfoDTO;
 import com.prabal.spotify_clone.catalogcontext.application.dto.SaveSongDTO;
 import com.prabal.spotify_clone.catalogcontext.application.dto.SongContentDTO;
-import com.prabal.spotify_clone.usercontext.application.UserService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import org.springframework.http.HttpStatus;
@@ -27,13 +26,11 @@ import java.util.stream.Collectors;
 public class SongResource {
     private final SongService songService;
     private final Validator validator;
-    private final UserService userService;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public SongResource(SongService songService, Validator validator, UserService userService) {
+    public SongResource(SongService songService, Validator validator) {
         this.songService = songService;
         this.validator = validator;
-        this.userService = userService;
     }
 
     @PostMapping(value = "/songs", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -65,5 +62,10 @@ public class SongResource {
         Optional<SongContentDTO> songContentByPublicId = songService.getOneByPublicId(publicId);
         return songContentByPublicId.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.of(ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "UUID Unknown")).build());
+    }
+
+    @GetMapping("/songs/search")
+    public ResponseEntity<List<ReadSongInfoDTO>> search(@RequestParam String searchText) {
+        return ResponseEntity.ok(songService.search(searchText));
     }
 }
