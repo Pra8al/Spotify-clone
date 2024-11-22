@@ -1,9 +1,10 @@
 import {computed, inject, Injectable, signal, WritableSignal} from '@angular/core';
-import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
 import {ReadSong, SaveSong} from './model/song.model';
 import {State} from './model/state.model';
 import {environment} from '../../environments/environment.development';
 import {User} from './model/user.model';
+import {catchError, map, Observable, of} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -49,6 +50,13 @@ export class SongService {
           error: err => this.getAll$.set(State.Builder<Array<ReadSong>, HttpErrorResponse>().forError(err).build())
         }
       )
+  }
+
+  search(searchText: string): Observable<State<Array<ReadSong>, HttpErrorResponse>> {
+    const queryParams = new HttpParams().set('searchText', searchText);
+    return this.http.get<Array<ReadSong>>(`${environment.API_URL}/api/songs/search`, {params: queryParams})
+      .pipe(map(songs => State.Builder<Array<ReadSong>, HttpErrorResponse>().forSuccess(songs).build()),
+        catchError(err => of(State.Builder<Array<ReadSong>, HttpErrorResponse>().forError(err).build())))
   }
 
   constructor() {
