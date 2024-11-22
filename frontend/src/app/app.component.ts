@@ -30,7 +30,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.faIconLibrary.addIcons(...fontAwesomeIcons);
-    this.toastService.show("Hello Toast","SUCCESS");
+    // this.toastService.show("Hello Toast","SUCCESS");
   }
 
   private openOrCloseAuthModal(state: AuthPopupState): void {

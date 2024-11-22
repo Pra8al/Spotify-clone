@@ -1,6 +1,6 @@
 import {Component, effect, inject, OnInit} from '@angular/core';
 import {FaIconComponent} from '@fortawesome/angular-fontawesome';
-import {RouterLink, RouterModule} from '@angular/router';
+import {RouterModule} from '@angular/router';
 import {SmallSongCardComponent} from '../../shared/small-song-card/small-song-card.component';
 import {SongService} from '../../service/song.service';
 import {ReadSong} from '../../service/model/song.model';
@@ -23,11 +23,14 @@ export class LibraryComponent implements OnInit {
 
   songs: Array<ReadSong> = [];
 
+  isLoading = false;
+
   constructor() {
     effect(() => {
       if (this.songService.getAllSig().status === "OK") {
         this.songs = this.songService.getAllSig().value!;
       }
+      this.isLoading = false;
     })
   }
 
@@ -36,6 +39,7 @@ export class LibraryComponent implements OnInit {
   }
 
   private fetchSongs(): void {
+    this.isLoading = true;
     this.songService.getAll();
   }
 

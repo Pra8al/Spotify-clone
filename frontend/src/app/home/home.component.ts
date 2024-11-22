@@ -4,7 +4,6 @@ import {SongCardComponent} from './song-card/song-card.component';
 import {SongService} from '../service/song.service';
 import {ToastService} from '../service/toast.service';
 import {ReadSong} from '../service/model/song.model';
-import {FormBuilder} from '@angular/forms';
 import {SongContentService} from '../service/song-content.service';
 
 @Component({
@@ -19,15 +18,18 @@ export class HomeComponent implements OnInit {
   private toastService = inject(ToastService);
   private songContentService = inject(SongContentService);
   allSongs: Array<ReadSong> | undefined;
+  isLoading = false;
 
   constructor() {
+    this.isLoading = true;
     effect(() => {
       const allSigResponse = this.songService.getAllSig();
-      if(allSigResponse.status === "OK") {
+      if (allSigResponse.status === "OK") {
         this.allSongs = allSigResponse.value;
-      }else if(allSigResponse.status === "ERROR") {
+      } else if (allSigResponse.status === "ERROR") {
         this.toastService.show("Error occurred when getting all songs", "DANGER");
       }
+      this.isLoading = false;
     })
   }
 
