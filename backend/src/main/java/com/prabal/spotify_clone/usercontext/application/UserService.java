@@ -31,12 +31,12 @@ public class UserService {
             if (attributes.get("updated_at") != null) {
                 Instant dbLastModifiedDate = existingUser.orElseThrow().getLastModifiedDate();
                 Instant idpModifiedDate;
-                if(attributes.get("updated_at") instanceof Instant) {
+                if (attributes.get("updated_at") instanceof Instant) {
                     idpModifiedDate = (Instant) attributes.get("updated_at");
                 } else {
                     idpModifiedDate = Instant.ofEpochSecond((Integer) attributes.get("updated_at"));
                 }
-                if(idpModifiedDate.isAfter(dbLastModifiedDate)) {
+                if (idpModifiedDate.isAfter(dbLastModifiedDate)) {
                     updateUser(user);
                 }
             }
@@ -52,9 +52,9 @@ public class UserService {
         return userMapper.readUserDTOToUser(user);
     }
 
-    private void updateUser(User user){
+    private void updateUser(User user) {
         Optional<User> userToUpdateOpt = userRepository.findOneByEmail(user.getEmail());
-        if(userToUpdateOpt.isPresent()){
+        if (userToUpdateOpt.isPresent()) {
             User userToUpdate = userToUpdateOpt.get();
             userToUpdate.setEmail(user.getEmail());
             userToUpdate.setImageUrl(user.getImageUrl());
@@ -63,7 +63,8 @@ public class UserService {
             userRepository.saveAndFlush(userToUpdate);
         }
     }
-    public User mapOauth2AttributesToUser(Map<String, Object> attributes){
+
+    public User mapOauth2AttributesToUser(Map<String, Object> attributes) {
         User user = new User();
 
         String sub = String.valueOf(attributes.get("sub"));
@@ -97,5 +98,14 @@ public class UserService {
         }
 
         return user;
+    }
+
+    public Optional<ReadUserDTO> getByEmail(String email) {
+        Optional<User> oneByEmail = userRepository.findOneByEmail(email);
+        return oneByEmail.map(userMapper::readUserDTOToUser);
+    }
+
+    public boolean isAuthenticated() {
+        return !SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser");
     }
 }

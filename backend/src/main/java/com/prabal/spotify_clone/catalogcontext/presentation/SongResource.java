@@ -2,10 +2,16 @@ package com.prabal.spotify_clone.catalogcontext.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prabal.spotify_clone.catalogcontext.application.SongService;
+import com.prabal.spotify_clone.catalogcontext.application.dto.FavoriteSongDTO;
 import com.prabal.spotify_clone.catalogcontext.application.dto.ReadSongInfoDTO;
 import com.prabal.spotify_clone.catalogcontext.application.dto.SaveSongDTO;
 import com.prabal.spotify_clone.catalogcontext.application.dto.SongContentDTO;
+import com.prabal.spotify_clone.infrastructure.service.dto.State;
+import com.prabal.spotify_clone.infrastructure.service.dto.StatusNotification;
+import com.prabal.spotify_clone.usercontext.ReadUserDTO;
+import com.prabal.spotify_clone.usercontext.application.UserService;
 import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Valid;
 import jakarta.validation.Validator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,10 +33,12 @@ public class SongResource {
     private final SongService songService;
     private final Validator validator;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final UserService userService;
 
-    public SongResource(SongService songService, Validator validator) {
+    public SongResource(SongService songService, Validator validator, UserService userService) {
         this.songService = songService;
         this.validator = validator;
+        this.userService = userService;
     }
 
     @PostMapping(value = "/songs", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -67,5 +75,24 @@ public class SongResource {
     @GetMapping("/songs/search")
     public ResponseEntity<List<ReadSongInfoDTO>> search(@RequestParam String searchText) {
         return ResponseEntity.ok(songService.search(searchText));
+    }
+
+    @PostMapping("/songs/like")
+    public ResponseEntity<FavoriteSongDTO> addOrRemoveFromFavorite(@Valid @RequestBody FavoriteSongDTO favoriteSongDTO) {
+        ReadUserDTO userFromAuthentication = userService.getAuthenticatedUserFromSecurityContext();
+        State<FavoriteSongDTO, String> favoriteSongResponse = songService.addOrRemoveFromFavorite(favoriteSongDTO, userFromAuthentication.email());
+        if (favoriteSongResponse.getStatus().equals(StatusNotification.ERROR)) {
+            ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, favoriteSongResponse.getError());
+            return ResponseEntity.of(problemDetail).build();
+        } else {
+            return ResponseEntity.ok(favoriteSongResponse.getValue());
+        }
+    }
+
+    @GetMapping("/songs/like")
+    public ResponseEntity<List<ReadSongInfoDTO>> fetchFavoriteSongs() {
+        ReadUserDTO userFromAuthentication = userService.getAuthenticatedUserFromSecurityContext();
+        List<ReadSongInfoDTO> readSongInfoDTOS = songService.fetchFavoriteSongs(userFromAuthentication.email());
+        return ResponseEntity.ok(readSongInfoDTOS);
     }
 }

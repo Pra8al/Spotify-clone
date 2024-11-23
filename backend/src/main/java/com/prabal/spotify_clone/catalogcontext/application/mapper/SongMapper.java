@@ -15,22 +15,22 @@ public interface SongMapper {
     @Mapping(target = "publicId", ignore = true)
     Song saveSongDTOToSong(SaveSongDTO saveSongDTO);
 
-    @Mapping(target = "isFavorite", ignore = true)
+    @Mapping(target = "favorite", ignore = true)
     ReadSongInfoDTO songToReadSongInfoDTO(Song song);
 
-    default SongTitleVO stringToSongTitleVO(String title){
+    default SongTitleVO stringToSongTitleVO(String title) {
         return new SongTitleVO(title);
     }
 
-    default SongAuthorVO stringToSongAuthorVO(String author){
+    default SongAuthorVO stringToSongAuthorVO(String author) {
         return new SongAuthorVO(author);
     }
 
-    default String songTitleVOToString(SongTitleVO title){
+    default String songTitleVOToString(SongTitleVO title) {
         return title.value();
     }
 
-    default String songAuthorVOToString(SongAuthorVO author){
+    default String songAuthorVOToString(SongAuthorVO author) {
         return author.value();
     }
 }
