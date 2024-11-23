@@ -6,11 +6,12 @@ import {SongContentService} from '../../service/song-content.service';
 import {ReadSong, SongContent} from '../../service/model/song.model';
 import {Howl} from 'howler';
 import {AuthService} from '../../service/auth.service';
+import {FavoriteSongBtnComponent} from '../../shared/favorite-song-btn/favorite-song-btn.component';
 
 @Component({
   selector: 'app-player',
   standalone: true,
-  imports: [FontAwesomeModule, FormsModule, SmallSongCardComponent],
+  imports: [FontAwesomeModule, FormsModule, SmallSongCardComponent, FavoriteSongBtnComponent],
   templateUrl: './player.component.html',
   styleUrl: './player.component.scss'
 })

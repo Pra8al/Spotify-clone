@@ -21,7 +21,7 @@
     @for (song of songResult; track song.publicId) {
       <div class="song-card-background w-100 mb-2 p-2 pe-3 d-flex align-items-center">
         <app-small-song-card class="w-100" [song]="song" (songToPlay$)="onPlay($event)" />
-<!--        <app-favorite-song-btn [song]="song"/>-->
+        <app-favorite-song-btn [song]="song"/>
       </div>
     }
   }
