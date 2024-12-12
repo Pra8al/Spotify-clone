@@ -1,4 +1,4 @@
-# Spotify Clone \U0001F3B5
+# Spotify Clone 🎵
 
 A feature-rich Spotify-like music streaming application built to replicate the functionality and user experience of the Spotify platform.
 
@@ -6,56 +6,61 @@ A feature-rich Spotify-like music streaming application built to replicate the f
 
 ---
 
-## Features \u2728
+## Features ✨
 
 - **User Authentication**: Secure login and account management.
 - **Music Library**: Browse a vast collection of songs by genre, artist, or album.
-- **Playlists**: Create, edit, and share playlists.
+- **Playlists**: Create, edit playlists. Mark favorites on songs.
 - **Streaming Player**: High-quality music streaming with playback controls.
 - **Responsive Design**: Optimized for desktop and mobile.
 
 ---
 
-## Tech Stack \U0001F6E0\uFE0F
+## Tech Stack 🛠️
 
-- **Frontend**: [Angular.js]
-- **Backend**: [Spring Boot] with RESTful APIs
-- **Database**: [Postgres]
-- **Other Tools**: [OAuth2.0]
+- **Frontend**: Angular
+- **Backend**: Spring Boot (Maven-based)
+- **Database**: Postgres
+- **Other Tools**: OAuth2.0
 
 ---
 
-## Installation \U0001F4E5
+## Installation 📥
 
-1. **Clone the repository**:
+### Backend Setup
+
+1. **Navigate to the backend directory**:
    ```bash
-   git clone https://github.com/Pra8al/Spotify-clone.git
+   cd Spotify-clone/backend
    ```
-2. **Navigate to the project directory**:
+2. **Build the project using Maven**:
    ```bash
-   cd Spotify-clone
+   mvn clean install
    ```
-3. **Install dependencies**:
+3. **Run the application**:
+   ```bash
+   mvn spring-boot:run
+   ```
+4. The backend server should now be running at `http://localhost:8080`.
+
+### Frontend Setup
+
+1. **Navigate to the frontend directory**:
+   ```bash
+   cd Spotify-clone/frontend
+   ```
+2. **Install Angular dependencies**:
    ```bash
    npm install
    ```
-4. **Run the application**:
+3. **Run the Angular development server**:
    ```bash
-   npm start
+   ng serve
    ```
+4. The frontend application should now be accessible at `http://localhost:4200`.
 
----
 
-## Screenshots \U0001F4F7
-
-Add images here to showcase your application's interface:
-- Home page
-- Music player
-- Playlist view
-
----
-
-## Contribution \U0001F91D
+## Contribution 🤝
 
 1. Fork the repository.
 2. Create a new branch:
@@ -70,6 +75,9 @@ Add images here to showcase your application's interface:
 
 ---
 
-## License \U0001F4DC
+## Screenshots 📸
 
-This project is licensed under the MIT License.
+Add images here to showcase your application's interface:
+- **Home Page**: ![Home Page](./assets/home-page.png)
+- **Music Player**: ![Music Player](./assets/music-player.png)
+- **Playlist View**: ![Playlist View](./
