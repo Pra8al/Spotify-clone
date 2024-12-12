@@ -2,7 +2,8 @@
 
 A feature-rich Spotify-like music streaming application built to replicate the functionality and user experience of the Spotify platform.
 
-![Spotify Clone Screenshot](path-to-image-placeholder)
+
+![Spotify Clone Screenshot](./frontend/screenshots/App.png)
 
 ---
 
@@ -13,6 +14,7 @@ A feature-rich Spotify-like music streaming application built to replicate the f
 - **Playlists**: Create, edit playlists. Mark favorites on songs.
 - **Streaming Player**: High-quality music streaming with playback controls.
 - **Responsive Design**: Optimized for desktop and mobile.
+- **Latest Angular features**: Signal, Standalone component, New Control flow syntax
 
 ---
 
@@ -21,7 +23,7 @@ A feature-rich Spotify-like music streaming application built to replicate the f
 - **Frontend**: Angular
 - **Backend**: Spring Boot (Maven-based)
 - **Database**: Postgres
-- **Other Tools**: OAuth2.0
+- **Other Tools**: Secured with Auth0 (OAuth2)
 
 ---
 
@@ -77,7 +79,7 @@ A feature-rich Spotify-like music streaming application built to replicate the f
 
 ## Screenshots 📸
 
-Add images here to showcase your application's interface:
-- **Home Page**: ![Home Page](./assets/home-page.png)
-- **Music Player**: ![Music Player](./assets/music-player.png)
-- **Playlist View**: ![Playlist View](./
+Few samples to showcase application's interface:
+- **Search Song**: ![Search Song](./frontend/screenshots/Search.png)
+- **Add Song**: ![Add Song](./frontend/screenshots/Form.png)
+- **Favorites/Playlist**: ![Playlist View](./frontend/screenshots/Favorites.png)
