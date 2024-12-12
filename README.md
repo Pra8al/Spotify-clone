@@ -22,7 +22,7 @@ A feature-rich Spotify-like music streaming application built to replicate the f
 
 - **Frontend**: Angular
 - **Backend**: Spring Boot (Maven-based)
-- **Database**: Postgres
+- **Database**: PostgreSQL
 - **Other Tools**: Secured with Auth0 (OAuth2)
 
 ---
